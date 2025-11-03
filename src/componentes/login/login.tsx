@@ -1,5 +1,7 @@
 import { useNavigate, useSearchParams } from "react-router-dom";
 import api from "../../api/api";
+import "./login.css"
+
 function Login(){
     const navigate = useNavigate()
     //url   localhost:5123/login?mensagem=Token Inválido
@@ -44,6 +46,7 @@ function Login(){
         <input type="password" name="senha" id="senha" />
         <button type="submit">Entrar</button>
     </form>
+    funct
     </>
     )
 }

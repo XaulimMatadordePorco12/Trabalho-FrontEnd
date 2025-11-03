@@ -40,3 +40,11 @@
 .read-the-docs {
   color: #888;
 }
+
+.car {
+  width: 50px;
+  height: 50px;
+  background-color: #4caf50;
+  border-radius: 10px;
+  color: white;
+}

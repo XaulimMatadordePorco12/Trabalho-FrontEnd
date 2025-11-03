@@ -44,6 +44,7 @@ function App() {
   }
   return (
     <>
+<div className="car"><a href="./componetes/carrinho/Carrinho.tsx"></a></div>  
       <div>Cadastro de Produtos</div>
       <form onSubmit={handleForm}>
         <input type="text" name="nome" placeholder="Nome" />

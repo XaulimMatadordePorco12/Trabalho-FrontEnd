@@ -25,29 +25,50 @@ function Login(){
             senha
         }).then(resposta=>{
             if(resposta.status===200){
-                localStorage.setItem("token",resposta?.data?.token)
+                localStorage.setItem("token", resposta?.data?.token)
+                localStorage.setItem("tipoUsuario", resposta?.data?.tipo)
+                localStorage.setItem("email", email as string)
                 navigate("/")
             }
         }).catch((error:any)=>{
             const msg = error?.response?.data?.mensagem || 
                         error?.mensagem || 
-                        "Erro Desconhecido!"
+                        "Erro: Email ou senha inválidos!"
             navigate(`/login?mensagem=${encodeURIComponent(msg)}`)
         })
     }
 
 
     return(
-    <>
-    <h1>Login</h1>
-    {mensagem&&<p>{mensagem}</p>}
-    <form onSubmit={handleSubmit}>
-        <input type="text" name="email" id="email" />
-        <input type="password" name="senha" id="senha" />
-        <button type="submit">Entrar</button>
-    </form>
-    funct
-    </>
+        <div className="login-page">
+            <div className="login-card">
+                <h1>Login</h1>
+                {mensagem && <p className="login-message">{mensagem}</p>}
+                <form onSubmit={handleSubmit} className="login-form">
+                    <div>
+                        <label htmlFor="email">Email:</label>
+                        <input 
+                            type="email" 
+                            name="email" 
+                            id="email" 
+                            placeholder="Digite seu email"
+                            required
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="senha">Senha:</label>
+                        <input 
+                            type="password" 
+                            name="senha" 
+                            id="senha" 
+                            placeholder="Digite sua senha"
+                            required
+                        />
+                    </div>
+                    <button type="submit" className="btn-primary">Entrar</button>
+                </form>
+            </div>
+        </div>
     )
 }
 export default Login;

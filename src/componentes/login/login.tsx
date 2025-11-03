@@ -26,7 +26,6 @@ function Login(){
         }).then(resposta=>{
             if(resposta.status===200){
                 localStorage.setItem("token", resposta?.data?.token)
-                localStorage.setItem("tipoUsuario", resposta?.data?.tipo)
                 localStorage.setItem("email", email as string)
                 navigate("/")
             }

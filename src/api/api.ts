@@ -18,6 +18,7 @@ api.interceptors.response.use(
     (error)=>{
         if(error?.code==="ERR_NETWORK"){
             window.location.href=`/error?mensagem=${encodeURIComponent("Ligue o Servidor-> NPM RUN DEV")}`
+            
         }
         const status = error?.response?.status;
         if(status===401&&!(error?.response?.config?.url.endsWith("/login"))){

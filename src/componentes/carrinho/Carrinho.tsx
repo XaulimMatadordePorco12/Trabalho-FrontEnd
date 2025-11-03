@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import axios from "axios";
 import "./Carrinho.css";
 
 interface ItemCarrinho {
@@ -9,48 +10,74 @@ interface ItemCarrinho {
   capaUrl: string;
 }
 
+const API_URL = import.meta.env.VITE_API_URL;
+
+function getUsuarioIdDoStorage(): string | null {
+  const usuarioStorage = localStorage.getItem('usuario');
+  if (usuarioStorage) {
+    try {
+      const usuario = JSON.parse(usuarioStorage);
+      return usuario._id;
+    } catch (e) {
+      console.error("Erro ao parsear usuário do localStorage", e);
+      return null;
+    }
+  }
+  return null;
+}
+
 export default function Carrinho() {
   const [itens, setItens] = useState<ItemCarrinho[]>([]);
   const [total, setTotal] = useState(0);
 
   useEffect(() => {
-    const carrinhoFake: ItemCarrinho[] = [
-      {
-        id: "1",
-        titulo: "O Senhor dos Anéis: A Sociedade do Anel",
-        precoUnitario: 59.9,
-        quantidade: 1,
-        capaUrl: "https://exemplo.com/imagens/sociedade-do-anel.jpg"
-      },
-      {
-        id: "2",
-        titulo: "1984",
-        precoUnitario: 42.5,
-        quantidade: 2,
-        capaUrl: "https://exemplo.com/imagens/1984.jpg"
-      }
-    ];
-    setItens(carrinhoFake);
-  }, []);
-
-  useEffect(() => {
     const novoTotal = itens.reduce(
-      (acc, item) => acc + item.precoUnitario * item.quantidade,
+      (acc, item) => acc + (item.precoUnitario * item.quantidade),
       0
     );
     setTotal(novoTotal);
   }, [itens]);
 
+  const USUARIO_ID = getUsuarioIdDoStorage();
+
+  useEffect(() => {
+    if (!USUARIO_ID) {
+      alert("Usuário não logado. Faça o login para ver o carrinho.");
+      setItens([]);
+      return;
+    }
+
+    async function fetchCarrinho() {
+      try {
+        const response = await axios.get(`${API_URL}/carrinho/${USUARIO_ID}`);
+        if (response.data && response.data.itens) {
+          setItens(response.data.itens);
+        } else if (Array.isArray(response.data)) {
+          setItens(response.data);
+        }
+      } catch (error) {
+        if (axios.isAxiosError(error) && error.response?.status === 404) {
+          setItens([]);
+        } else {
+          console.error("Erro ao buscar carrinho:", error);
+          alert("Erro ao buscar seu carrinho.");
+        }
+      }
+    }
+
+    fetchCarrinho();
+  }, [USUARIO_ID]);
+
   function removerItem(id: string) {
-    setItens(itens.filter((item) => item.id !== id));
+    alert(`(TAREFA B1) Implementar remoção do item: ${id}`);
   }
 
   function alterarQuantidade(id: string, novaQtd: number) {
-    setItens((prev) =>
-      prev.map((item) =>
-        item.id === id ? { ...item, quantidade: Math.max(1, novaQtd) } : item
-      )
-    );
+    alert(`(TAREFA B2) Implementar alteração de qtd: ${id} para ${novaQtd}`);
+  }
+
+  async function excluirCarrinhoInteiro() {
+    alert(`(TAREFA B3) Implementar exclusão do carrinho do usuário: ${USUARIO_ID}`);
   }
 
   return (
@@ -73,7 +100,7 @@ export default function Carrinho() {
                   <button onClick={() => alterarQuantidade(item.id, item.quantidade + 1)}>+</button>
                 </div>
                 <button className="remover" onClick={() => removerItem(item.id)}>
-                  Remover
+                  Remover (B1)
                 </button>
               </div>
             </div>
@@ -82,6 +109,12 @@ export default function Carrinho() {
           <div className="total">
             <h3>Total: R$ {total.toFixed(2)}</h3>
             <button className="finalizar">Finalizar Compra</button>
+            <button 
+              onClick={excluirCarrinhoInteiro}
+              style={{ marginTop: '10px', backgroundColor: '#dc3545', color: 'white', border: 'none', padding: '10px 15px', borderRadius: '5px', cursor: 'pointer' }}
+            >
+              Excluir Carrinho (B3)
+            </button>
           </div>
         </>
       )}

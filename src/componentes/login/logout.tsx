@@ -6,7 +6,8 @@ function Logout() {
 
     useEffect(() => {
         localStorage.removeItem('token');
-        localStorage.removeItem('tipoUsuario');
+        // remover a mesma chave que o App consulta ("tipo")
+        localStorage.removeItem('tipo');
         localStorage.removeItem('email');
         navigate('/login');
     }, [navigate]);

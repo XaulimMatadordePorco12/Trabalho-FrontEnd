@@ -12,29 +12,61 @@ function Login(){
     const mensagem = searchParams.get("mensagem")
 
     //Função chamada quando clicamos no botão do formulário
-    function handleSubmit(event:React.FormEvent<HTMLFormElement>){
+    async function handleSubmit(event:React.FormEvent<HTMLFormElement>){
         event.preventDefault()
-        //Vamos pegar o que a pessoa digitou no formulário
+        // Vamos pegar o que a pessoa digitou no formulário
         const formData = new FormData(event.currentTarget)
-        const email = formData.get("email")
-        const senha = formData.get("senha")
+        const email = String(formData.get("email") || "")
+        const senha = String(formData.get("senha") || "")
 
-        //chamar a API.post para mandar o login e senha
-        api.post("/login",{
-            email,
-            senha
-        }).then(resposta=>{
-            if(resposta.status===200){
-                localStorage.setItem("token", resposta?.data?.token)
-                localStorage.setItem("email", email as string)
-                navigate("/")
+        console.log("Email:", email)
+        console.log("Senha:", senha ? '*****' : '')
+
+        try{
+            // chamar a API.post para mandar o login e senha
+            const resposta = await api.post("/login",{
+                email,
+                senha
+            })
+
+            console.debug('Resposta do login:', resposta)
+
+            // aceitar vários nomes possíveis para o token (token, accessToken, access_token)
+            const token = resposta?.data?.token || resposta?.data?.accessToken || resposta?.data?.access_token
+            // A API pode retornar o tipo com nomes diferentes: tipo, tipoUsuario, role
+            let tipo = resposta?.data?.tipo || resposta?.data?.tipoUsuario || resposta?.data?.role
+
+            if(token){
+                localStorage.setItem("token", token)
+
+                // Se o backend não retornou o tipo explicitamente, tentar decodificar o token (payload JWT) para extrair 'tipo'
+                if(!tipo){
+                    try{
+                        const payloadBase64 = token.split('.')[1]
+                        const decodedJson = JSON.parse(window.atob(payloadBase64))
+                        if(decodedJson && decodedJson.tipo) tipo = decodedJson.tipo
+                    }catch(e){
+                        console.debug('Não foi possível decodificar JWT para extrair tipo', e)
+                    }
+                }
+            } else {
+                console.warn('Nenhum token retornado pela API de login', resposta?.data)
             }
-        }).catch((error:any)=>{
+
+            if(!tipo) tipo = 'user'
+            localStorage.setItem("tipo", tipo)
+            localStorage.setItem("email", email)
+
+            // redireciona para a página principal
+            navigate("/")
+
+    } catch (error: any) {
             const msg = error?.response?.data?.mensagem || 
                         error?.mensagem || 
                         "Erro: Email ou senha inválidos!"
             navigate(`/login?mensagem=${encodeURIComponent(msg)}`)
-        })
+            console.error("Erro ao fazer login:", error)
+        }
     }
 
 

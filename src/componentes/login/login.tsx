@@ -2,7 +2,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import api from "../../api/api";
 import "./login.css"
 
-function Login(){
+function Login() {
     const navigate = useNavigate()
     //url   localhost:5123/login?mensagem=Token Inválido
     //para pegar a mensagem passada pela url usamos o useSearchParams()
@@ -12,7 +12,7 @@ function Login(){
     const mensagem = searchParams.get("mensagem")
 
     //Função chamada quando clicamos no botão do formulário
-    async function handleSubmit(event:React.FormEvent<HTMLFormElement>){
+    async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault()
         // Vamos pegar o que a pessoa digitou no formulário
         const formData = new FormData(event.currentTarget)
@@ -22,9 +22,9 @@ function Login(){
         console.log("Email:", email)
         console.log("Senha:", senha ? '*****' : '')
 
-        try{
+        try {
             // chamar a API.post para mandar o login e senha
-            const resposta = await api.post("/login",{
+            const resposta = await api.post("/login", {
                 email,
                 senha
             })
@@ -36,16 +36,16 @@ function Login(){
             // A API pode retornar o tipo com nomes diferentes: tipo, tipoUsuario, role
             let tipo = resposta?.data?.tipo || resposta?.data?.tipoUsuario || resposta?.data?.role
 
-            if(token){
+            if (token) {
                 localStorage.setItem("token", token)
 
                 // Se o backend não retornou o tipo explicitamente, tentar decodificar o token (payload JWT) para extrair 'tipo'
-                if(!tipo){
-                    try{
+                if (!tipo) {
+                    try {
                         const payloadBase64 = token.split('.')[1]
                         const decodedJson = JSON.parse(window.atob(payloadBase64))
-                        if(decodedJson && decodedJson.tipo) tipo = decodedJson.tipo
-                    }catch(e){
+                        if (decodedJson && decodedJson.tipo) tipo = decodedJson.tipo
+                    } catch (e) {
                         console.debug('Não foi possível decodificar JWT para extrair tipo', e)
                     }
                 }
@@ -53,24 +53,35 @@ function Login(){
                 console.warn('Nenhum token retornado pela API de login', resposta?.data)
             }
 
-            if(!tipo) tipo = 'user'
+            if (!tipo) tipo = 'cliente'
+
+            // Salva os dados no localStorage
             localStorage.setItem("tipo", tipo)
-            localStorage.setItem("email", email)
+            localStorage.setItem("email", email) // 'email' já foi pego do formulário
 
-            // redireciona para a página principal
-            navigate("/")
+            // (Nota: Se sua API também retorna o objeto 'usuario', 
+            // é recomendado salvar ele inteiro também, como fizemos antes: 
+            // localStorage.setItem("usuario", JSON.stringify(resposta.data.usuario))
+            // redireciona baseado no tipo de usuário
+            if (tipo === 'admin') {
+                // A linha 'localStorage.getItem('usuario')' foi removida pois não tinha efeito.
+                navigate("/admin/dashboard")
+            } else {
+                // Adicionado o redirecionamento para usuários comuns
+                navigate("/")
+            }
 
-    } catch (error: any) {
-            const msg = error?.response?.data?.mensagem || 
-                        error?.mensagem || 
-                        "Erro: Email ou senha inválidos!"
+        } catch (error: any) {
+            const msg = error?.response?.data?.mensagem ||
+                error?.mensagem ||
+                "Erro: Email ou senha inválidos!"
             navigate(`/login?mensagem=${encodeURIComponent(msg)}`)
             console.error("Erro ao fazer login:", error)
         }
     }
 
 
-    return(
+    return (
         <div className="login-page">
             <div className="login-card">
                 <h1>Login</h1>
@@ -78,20 +89,20 @@ function Login(){
                 <form onSubmit={handleSubmit} className="login-form">
                     <div>
                         <label htmlFor="email">Email:</label>
-                        <input 
-                            type="email" 
-                            name="email" 
-                            id="email" 
+                        <input
+                            type="email"
+                            name="email"
+                            id="email"
                             placeholder="Digite seu email"
                             required
                         />
                     </div>
                     <div>
                         <label htmlFor="senha">Senha:</label>
-                        <input 
-                            type="password" 
-                            name="senha" 
-                            id="senha" 
+                        <input
+                            type="password"
+                            name="senha"
+                            id="senha"
                             placeholder="Digite sua senha"
                             required
                         />

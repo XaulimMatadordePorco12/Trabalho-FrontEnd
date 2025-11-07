@@ -6,6 +6,8 @@ import Login from './componentes/login/login'
 import Logout from './componentes/login/logout'
 import Carrinho from './componentes/carrinho/Carrinho'
 import Erro from './componentes/erro/erro'
+import DashboardAdmin from './componentes/admin/DashboardAdmin'
+
 type LivroType = {
   _id: string,
   nome: string,
@@ -126,6 +128,11 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/logout" element={<Logout />} />
         <Route path="/error" element={<Erro />} />
+        <Route path="/admin/dashboard" element={
+          <ProtectedRoute>
+            <DashboardAdmin />
+          </ProtectedRoute>
+        } />
         <Route path="/carrinho" element={
           <ProtectedRoute>
             <Carrinho />

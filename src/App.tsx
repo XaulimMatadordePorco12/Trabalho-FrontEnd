@@ -6,7 +6,8 @@ import Login from './componentes/login/login'
 import Logout from './componentes/login/logout'
 import Carrinho from './componentes/carrinho/Carrinho'
 import Erro from './componentes/erro/erro'
-import DashboardAdmin from './componentes/admin/DashboardAdmin'
+import AdminLayout from './componentes/admin/AdminLayout';
+import DashboardEstatisticas from './componentes/admin/DashboardEstatisticas';
 
 type LivroType = {
   _id: string,
@@ -129,11 +130,14 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/logout" element={<Logout />} />
         <Route path="/error" element={<Erro />} />
-        <Route path="/admin/dashboard" element={
+        <Route path="/admin" element={
           <ProtectedRoute>
-            <DashboardAdmin />
+            {/* Renderiza o Layout (Sidebar + Área Vazia) */}
+            <AdminLayout />
           </ProtectedRoute>
-        } />
+        }>
+                    <Route index element={<DashboardEstatisticas />} />
+        </Route>
         <Route path="/carrinho" element={
           <ProtectedRoute>
             <Carrinho />

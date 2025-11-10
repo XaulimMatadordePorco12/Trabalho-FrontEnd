@@ -58,6 +58,20 @@ function Login() {
             // Salva os dados no localStorage
             localStorage.setItem("tipo", tipo)
             localStorage.setItem("email", email) // 'email' já foi pego do formulário
+            const usuarioId = resposta?.data?.usuarioId;
+
+            if (usuarioId) {
+                // O Carrinho.tsx espera um objeto JSON com a chave '_id'
+                const usuarioParaStorage = { _id: usuarioId };
+                try {
+                    localStorage.setItem('usuario', JSON.stringify(usuarioParaStorage));
+                    console.log('Objeto usuario salvo no storage:', usuarioParaStorage);
+                } catch (e) {
+                    console.debug('Não foi possível salvar usuário no localStorage', e)
+                }
+            } else {
+                console.warn('Backend de login não retornou usuarioId. O carrinho pode não funcionar.');
+            }
 
             // (Nota: Se sua API também retorna o objeto 'usuario', 
             // é recomendado salvar ele inteiro também, como fizemos antes: 

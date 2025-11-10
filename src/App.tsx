@@ -65,16 +65,17 @@ function LivrosPage() {
         const msg = error?.response?.data?.error || error.message
         alert('Erro ao adicionar livro: ' + msg)
       })
-
     form.reset()
   }
 
   function adicionarCarrinho(LivroId: string) {
-    api.post('/adicionarItem', { LivroId, quantidade: 1 })
+    // O backend espera { produtoId, quantidade }
+    api.post('/adicionarItem', { LivroId: LivroId, quantidade: 1 })
       .then(() => alert("Livro adicionado no carrinho!"))
       .catch((error) => {
         console.error('Error posting data:', error)
-        alert('Error posting data:' + error?.mensagem)
+        const msg = error?.response?.data?.mensagem || error?.message || String(error)
+        alert('Erro ao adicionar no carrinho: ' + msg)
       })
   }
 

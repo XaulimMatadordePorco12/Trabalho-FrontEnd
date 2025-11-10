@@ -107,8 +107,19 @@ export default function Carrinho() {
       return;
     }
 
-    // normalizar quantidade para inteiro não-negativo
-    const novaQtdSanitizada = Math.max(0, Math.floor(novaQtd));
+    // normalizar quantidade para inteiro
+    const novaQtdSanitizada = Math.floor(novaQtd);
+
+    // Se a quantidade for menor que 1, mostrar mensagem e não fazer a requisição
+    if (novaQtdSanitizada < 1) {
+      const item = itens.find(it => it.id === id);
+      if (item) {
+        alert(`Para remover "${item.titulo}" do carrinho, use o botão "Remover".`);
+      } else {
+        alert('Para remover o item do carrinho, use o botão "Remover".');
+      }
+      return;
+    }
 
     // pegar snapshot para rollback em caso de erro
     const prevItens = itens;

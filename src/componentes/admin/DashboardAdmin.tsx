@@ -1,13 +1,9 @@
 import { useState, useEffect } from 'react';
-// 1. CORREÇÃO: Importar 'axios' diretamente em vez de um 'api' customizado
 import axios from 'axios';
-// 2. CORREÇÃO: O import do CSS foi removido para evitar erros de build.
-// Os estilos serão injetados diretamente (veja abaixo).
-import './DashboardAdmin.css';
+import './DashboardAdmin.css'; // O CSS atualizado está abaixo
 
-// Interfaces para os dados que esperamos do backend
 interface RankingItem {
-  _id: string; // ID do livro
+  _id: string;
   titulo: string;
   totalVendido: number;
 }
@@ -18,159 +14,179 @@ interface Estatisticas {
   rankingItens: RankingItem[];
 }
 
-// 2. CORREÇÃO: Componente de estilos para injetar o CSS
-// Isso corrige o erro "Could not resolve ./DashboardAdmin.css"
-
-
-
-// Componente da Página/Área de Administração
 export default function DashboardAdmin() {
-  // Estado para armazenar os dados do backend
   const [estatisticas, setEstatisticas] = useState<Estatisticas | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // useEffect para buscar os dados da API
+  // useEffect para buscar os dados da API (sem alterações)
   useEffect(() => {
     async function fetchEstatisticas() {
       try {
         setLoading(true);
         setError(null);
 
-        // --- INÍCIO DA CORREÇÃO 1 (axios e Token) ---
-        // Isso corrige o erro "Could not resolve ../api/api"
-
         // 1. Buscar o token (JWT) salvo no localStorage
         const token = localStorage.getItem('token');
         if (!token) {
-          setError("Você não está autenticado. Faça o login.");
+          setError('Você não está autenticado. Faça o login.');
           setLoading(false);
           return;
         }
 
         // 2. (Verificação de segurança no Frontend)
-        // Checa se o usuário logado é 'admin' antes de tentar a chamada
-       const tipoUsuario = localStorage.getItem('tipo');
-        
-        // Se 'tipo' não existir
+        const tipoUsuario = localStorage.getItem('tipo');
         if (!tipoUsuario) {
-            setError("Dados de tipo de usuário não encontrados. Faça login novamente.");
-            setLoading(false);
-            return;
+          setError(
+            'Dados de tipo de usuário não encontrados. Faça login novamente.'
+          );
+          setLoading(false);
+          return;
         }
-        
-        // Comparamos a string 'tipoUsuario' diretamente, sem JSON.parse
         if (tipoUsuario !== 'admin') {
-            setError("Acesso negado. Você precisa ser um administrador.");
-            setLoading(false);
-            return;
+          setError('Acesso negado. Você precisa ser um administrador.');
+          setLoading(false);
+          return;
         }
 
         // 3. Configurar os headers para enviar o token
         const config = {
           headers: {
-            'Authorization': `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         };
 
-        // 4. Fazer a chamada com axios, a URL completa e os headers
-        // (Presumindo que seu backend roda na porta 8000)
+        // 4. Fazer a chamada com axios
         const response = await axios.get(
-          'http://localhost:8000/admin/dashboard/estatisticas', 
+          'http://10.10.65.39:8000/admin/estatisticas',
           config
         );
-        // --- FIM DA CORREÇÃO 1 ---
 
         setEstatisticas(response.data);
-
       } catch (err: any) {
-        console.error("Erro ao buscar estatísticas:", err);
-        
-        // --- INÍCIO DA MUDANÇA ---
-        // Melhora a forma de reportar erros
-        let errorMessage = "Erro ao carregar os dados do dashboard."; // Mensagem Padrão
-
-        if (axios.isAxiosError(err)) {
-          if (err.response?.status === 403) {
-            errorMessage = "Acesso negado. Você precisa ser um administrador.";
-          } else if (err.response?.status === 401) {
-            errorMessage = "Você não está autenticado. Faça o login.";
-          } else if (err.message) {
-            errorMessage = `Erro de rede: ${err.message}`;
+        console.error('Erro ao buscar estatísticas:', err);
+        let errorMessage = 'Erro ao carregar os dados do dashboard.';
+        if (err && err.response) {
+          if (err.response.status === 403) {
+            errorMessage = 'Acesso negado. Você precisa ser um administrador.';
+          } else if (err.response.status === 401) {
+            errorMessage = 'Você não está autenticado. Faça o login.';
           }
-        } else if (err instanceof Error) {
-            // Captura outros erros de JavaScript
-            errorMessage = `Erro inesperado: ${err.message}`;
+        } else if (err && err.message) {
+          errorMessage = err.message;
         }
-        
         setError(errorMessage);
-        // --- FIM DA MUDANÇA ---
-
       } finally {
         setLoading(false);
       }
     }
 
     fetchEstatisticas();
-  }, []); 
+  }, []);
 
-  // Renderização
-  if (loading) {
-    return <div className="dashboard-container"><p>Carregando estatísticas...</p></div>;
-  }
+  // --- MUDANÇA ---
+  // Criamos uma função separada para renderizar o conteúdo principal
+  // Isso limpa o layout principal e nos permite mostrar a sidebar
+  // mesmo durante o loading ou em caso de erro.
+  const renderDashboardContent = () => {
+    if (loading) {
+      return (
+        <div className="dashboard-container">
+          <p>Carregando estatísticas...</p>
+        </div>
+      );
+    }
 
-  if (error) {
-    return <div className="dashboard-container error-box"><p>{error}</p></div>;
-  }
+    if (error) {
+      return (
+        <div className="dashboard-container error-box">
+          <p>{error}</p>
+        </div>
+      );
+    }
 
-  if (!estatisticas) {
-    return <div className="dashboard-container"><p>Nenhum dado encontrado.</p></div>;
-  }
+    if (!estatisticas) {
+      return (
+        <div className="dashboard-container">
+          <p>Nenhum dado encontrado.</p>
+        </div>
+      );
+    }
 
-  // Renderização principal com os dados
+    // Renderização principal com os dados
+    return (
+      <div className="dashboard-container">
+        <h1>Dashboard do Administrador</h1>
+
+        {/* Seção com os cards de dados gerais (C2) */}
+        <section className="dashboard-cards">
+          <div className="card">
+            <h3>Carrinhos Ativos</h3>
+            <p>{estatisticas.carrinhosAtivos}</p>
+            <span>Usuários com pelo menos um item no carrinho.</span>
+          </div>
+          <div className="card">
+            <h3>Valor Total em Carrinhos</h3>
+            <p>
+              {estatisticas.valorTotalGeral.toLocaleString('pt-BR', {
+                style: 'currency',
+                currency: 'BRL',
+              })}
+            </p>
+            <span>Soma de todos os produtos em todos os carrinhos.</span>
+          </div>
+        </section>
+
+        {/* Seção com o Ranking de Itens (C2) */}
+        <section className="dashboard-ranking">
+          <h2>Ranking de Itens nos Carrinhos (Top 10)</h2>
+          {estatisticas.rankingItens.length === 0 ? (
+            <p>Nenhum item encontrado nos carrinhos.</p>
+          ) : (
+            <ol>
+              {estatisticas.rankingItens.map((item, index) => (
+                <li key={item._id}>
+                  <span className="rank-pos">{index + 1}.</span>
+                  <span className="rank-titulo">
+                    {item.titulo || 'Item sem título'}
+                  </span>
+                  <span className="rank-qtd">{item.totalVendido} unidades</span>
+                </li>
+              ))}
+            </ol>
+          )}
+        </section>
+      </div>
+    );
+  };
+
+  // --- MUDANÇA PRINCIPAL ---
+  // O 'return' agora foca no LAYOUT da página (Sidebar + Conteúdo)
   return (
-    <div className="dashboard-container">
-   
-      
-      <h1>Dashboard do Administrador</h1>
-      
-      {/* Seção com os cards de dados gerais (C2) */}
-      <section className="dashboard-cards">
-        <div className="card">
-          <h3>Carrinhos Ativos</h3>
-          <p>{estatisticas.carrinhosAtivos}</p>
-          <span>Usuários com pelo menos um item no carrinho.</span>
+    <div className="admin-layout">
+      {/* 1. A Sidebar */}
+      <aside className="sidebar">
+        <div className="sidebar-header">
+          <h2>Admin</h2>
         </div>
-        <div className="card">
-          <h3>Valor Total em Carrinhos</h3>
-          {/* Formata o valor para Reais (R$) */}
-          <p>
-            {estatisticas.valorTotalGeral.toLocaleString('pt-BR', {
-              style: 'currency',
-              currency: 'BRL',
-            })}
-          </p>
-          <span>Soma de todos os produtos em todos os carrinhos.</span>
-        </div>
-      </section>
+        <nav className="sidebar-nav">
+          <ul>
+            <li>
+              {/* Link está "ativo" por ser a única opção */}
+              <a href="#" className="active" onClick={(e) => e.preventDefault()}>
+                Estatísticas de Carrinho
+              </a>
+            </li>
+            {/* Você pode adicionar mais <li> aqui no futuro */}
+          </ul>
+        </nav>
+      </aside>
 
-      {/* Seção com o Ranking de Itens (C2) */}
-      <section className="dashboard-ranking">
-        <h2>Ranking de Itens nos Carrinhos (Top 10)</h2>
-        {estatisticas.rankingItens.length === 0 ? (
-          <p>Nenhum item encontrado nos carrinhos.</p>
-        ) : (
-          <ol>
-            {estatisticas.rankingItens.map((item, index) => (
-              <li key={item._id}>
-                <span className="rank-pos">{index + 1}.</span>
-                <span className="rank-titulo">{item.titulo || 'Item sem título'}</span>
-                <span className="rank-qtd">{item.totalVendido} unidades</span>
-              </li>
-            ))}
-          </ol>
-        )}
-      </section>
+      {/* 2. A Área de Conteúdo Principal */}
+      <main className="main-content-area">
+        {/* Chamamos a função que renderiza o conteúdo */}
+        {renderDashboardContent()}
+      </main>
     </div>
   );
 }

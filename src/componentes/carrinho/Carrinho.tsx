@@ -185,6 +185,22 @@ export default function Carrinho() {
                 <button className="remover" onClick={() => removerItem(item.id)}>
                   Remover (B1)
                 </button>
+                 <div>
+               <button
+                className="atualizar"
+                onClick={() => atualizarItemCarrinho(item.id, item.quantidade)}
+                style={{
+                  backgroundColor: "#007bff",
+                  color: "white",
+                  border: "none",
+                  padding: "8px 12px",
+                  borderRadius: "5px",
+                  cursor: "pointer",
+                  marginTop: "8px"
+                }}
+              >
+              </button>
+          </div>
               </div>
             </div>
           ))}
@@ -202,5 +218,16 @@ export default function Carrinho() {
         </>
       )}
     </div>
+    
+    
   );
+  async function atualizarItemCarrinho(id: string, novaQuantidade: number) {
+  const resposta = await fetch(`http://localhost:8000/carrinho/item/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ quantidade: novaQuantidade })
+  })
+  const dados = await resposta.json()
+  alert(dados.mensagem)
+}
 }

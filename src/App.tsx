@@ -8,6 +8,7 @@ import Carrinho from './componentes/carrinho/Carrinho'
 import Erro from './componentes/erro/erro'
 import AdminLayout from './componentes/admin/AdminLayout';
 import DashboardEstatisticas from './componentes/admin/DashboardEstatisticas';
+import GerenciarLivrosPage from './componentes/admin/GerenciarLivros';
 
 type LivroType = {
   _id: string,
@@ -31,44 +32,18 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
 
 function LivrosPage() {
-  const [Livros, setLivros] = useState<LivroType[]>([])
-  const tipoUsuario = localStorage.getItem('tipo')
+  const [Livros, setLivros] = useState<LivroType[]>([]) 
   const email = localStorage.getItem('email')
 
+  // 1. useEffect: Apenas carrega os livros (Listagem)
   useEffect(() => {
     api.get("/livros")
       .then((response) => setLivros(response.data))
       .catch((error) => console.error('Error fetching data:', error))
   }, [])
 
-  function handleForm(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    const form = event.currentTarget
-    const formData = new FormData(form)
 
-
-
-    const data = {
-      titulo: formData.get('titulo') as string,
-      autor: formData.get('autor') as string,
-      genero: formData.get('genero') as string,
-      preco: parseFloat(formData.get('preco') as string || '0'),
-      capaUrl: formData.get('capaUrl') as string,
-      descricao: formData.get('descricao') as string,
-      destaque: formData.has('destaque')
-    }
-
-
-    api.post("/livros", data)
-      .then((response) => setLivros([...Livros, response.data]))
-      .catch((error) => {
-        console.error('Erro ao adicionar livro:', error)
-        const msg = error?.response?.data?.error || error.message
-        alert('Erro ao adicionar livro: ' + msg)
-      })
-    form.reset()
-  }
-
+  // 3. adicionarCarrinho: Mantida (Funcionalidade do Cliente)
   function adicionarCarrinho(LivroId: string) {
     // O backend espera { produtoId, quantidade }
     api.post('/adicionarItem', { LivroId: LivroId, quantidade: 1 })
@@ -82,6 +57,7 @@ function LivrosPage() {
 
   return (
     <div>
+      {/* Navbar mantida */}
       <nav className="navbar">
         <span>Bem-vindo, {email}</span>
         <div>
@@ -90,22 +66,10 @@ function LivrosPage() {
         </div>
       </nav>
 
-      {tipoUsuario === 'admin' && (
-        <>
-          <div>Cadastro de Livros</div>
-          <form onSubmit={handleForm}>
-            <input type="text" name="nome" placeholder="Nome" />
-            <input type="number" name="preco" placeholder="Preço" />
-            <input type="text" name="urlfoto" placeholder="URL da Foto" />
-            <input type="text" name="descricao" placeholder="Descrição" />
-            <button type="submit">Cadastrar</button>
-          </form>
-        </>
-      )}
-
       <div>Lista de Livros</div>
       <div className="Livros-grid">
 
+        {/* Lógica de Listagem mantida */}
         {Livros.map((livro) => (
           <div key={livro._id} className="Livro-card">
             <h2>{livro.titulo}</h2>
@@ -130,13 +94,17 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/logout" element={<Logout />} />
         <Route path="/error" element={<Erro />} />
-        <Route path="/admin" element={
+        <Route path="/admin" element={ 
           <ProtectedRoute>
-            {/* Renderiza o Layout (Sidebar + Área Vazia) */}
-            <AdminLayout />
+            {/* 1. O Layout principal (AdminLayout) que contém a Sidebar e o <Outlet /> */}
+            <AdminLayout /> 
           </ProtectedRoute>
         }>
-                    <Route index element={<DashboardEstatisticas />} />
+            {/* 2. Rota Index: Conteúdo que aparece em http://localhost:5173/admin */}
+            <Route index element={<DashboardEstatisticas />} /> 
+
+            {/* 3. Nova Rota: Conteúdo que aparece em http://localhost:5173/admin/gerenciar-livros */}
+            <Route path="gerenciar-livros" element={<GerenciarLivrosPage />} /> 
         </Route>
         <Route path="/carrinho" element={
           <ProtectedRoute>

@@ -40,7 +40,7 @@ export default function DashboardEstatisticas() {
         }
         const config = { headers: { Authorization: `Bearer ${token}` } };
         const response = await axios.get(
-          'http://10.10.65.39:8000/admin/estatisticas',
+          'http://localhost:8000/admin/estatisticas',
           config
         );
         setEstatisticas(response.data);

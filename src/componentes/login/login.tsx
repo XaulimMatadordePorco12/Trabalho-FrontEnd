@@ -79,7 +79,7 @@ function Login() {
             // redireciona baseado no tipo de usuário
             if (tipo === 'admin') {
                 // A linha 'localStorage.getItem('usuario')' foi removida pois não tinha efeito.
-                navigate("/admin/dashboard")
+                navigate("/admin")
             } else {
                 // Adicionado o redirecionamento para usuários comuns
                 navigate("/")

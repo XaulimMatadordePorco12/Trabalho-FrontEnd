@@ -40,7 +40,8 @@ export default function Carrinho() {
   const USUARIO_ID = getUsuarioIdDoStorage();
 
   useEffect(() => {
-    if (!USUARIO_ID) {
+    const Token = localStorage.getItem('token');
+    if (!Token) {
       alert("Usuário não logado. Faça o login para ver o carrinho.");
       setItens([]);
       return;

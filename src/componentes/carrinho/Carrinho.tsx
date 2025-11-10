@@ -121,9 +121,10 @@ export default function Carrinho() {
     });
 
     try {
-      // endpoint assumido: PATCH /carrinho/:usuarioId/item/:itemId com { quantidade }
-      await api.patch(`/carrinho/${USUARIO_ID}/item/${id}`, {
-        quantidade: novaQtdSanitizada,
+      // POST /atualizarQuantidade com produtoId e quantidade
+      await api.post('/atualizarQuantidade', {
+        produtoId: id,
+        quantidade: novaQtdSanitizada
       });
     } catch (error) {
       // rollback em caso de falha

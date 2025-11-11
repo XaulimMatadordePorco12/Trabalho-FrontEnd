@@ -33,7 +33,9 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
 function LivrosPage() {
   const [Livros, setLivros] = useState<LivroType[]>([]) 
+  const [searchTerm, setSearchTerm] = useState('') 
   const email = localStorage.getItem('email')
+  const tipoUsuario = localStorage.getItem('tipo') 
 
   // 1. useEffect: Apenas carrega os livros (Listagem)
   useEffect(() => {
@@ -41,6 +43,19 @@ function LivrosPage() {
       .then((response) => setLivros(response.data))
       .catch((error) => console.error('Error fetching data:', error))
   }, [])
+
+
+  // 2. Lógica de Filtragem
+  const livrosFiltrados = Livros.filter(livro => {
+    // Converte o termo de busca e as propriedades do livro para minúsculas
+    const lowerCaseSearchTerm = searchTerm.toLowerCase();
+    
+    // Filtra se o título OU o gênero inclui o termo de busca
+    const tituloMatch = livro.titulo.toLowerCase().includes(lowerCaseSearchTerm);
+    const generoMatch = livro.genero.toLowerCase().includes(lowerCaseSearchTerm);
+
+    return tituloMatch || generoMatch;
+  });
 
 
   // 3. adicionarCarrinho: Mantida (Funcionalidade do Cliente)
@@ -57,20 +72,33 @@ function LivrosPage() {
 
   return (
     <div>
-      {/* Navbar mantida */}
+      {/* Navbar: usa a classe 'navbar' para layout principal */}
       <nav className="navbar">
         <span>Bem-vindo, {email}</span>
-        <div>
+        
+        {/* Campo de Busca: usa a classe 'navbar-search' */}
+        <input
+            type="text"
+            placeholder="Buscar por Título ou Gênero..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)} 
+            className="navbar-search" 
+        />
+
+        {/* Container dos links: usa a classe 'navbar-links' */}
+        <div className="navbar-links">
           <Link to="/carrinho">Carrinho</Link>
+          {/* Adiciona link para Admin se for admin */}
+          {tipoUsuario === 'admin' && <Link to="/admin">Admin</Link>} 
           <Link to="/logout">Sair</Link>
         </div>
       </nav>
 
-      <div>Lista de Livros</div>
+      <div className="page-title">Lista de Livros</div>
       <div className="Livros-grid">
 
-        {/* Lógica de Listagem mantida */}
-        {Livros.map((livro) => (
+        {/* Mapeia a lista FILTRADA */}
+        {livrosFiltrados.map((livro) => (
           <div key={livro._id} className="Livro-card">
             <h2>{livro.titulo}</h2>
             <h3>{livro.autor}</h3>
@@ -83,6 +111,12 @@ function LivrosPage() {
           </div>
         ))}
       </div>
+      {/* Mensagem se não houver resultados: usa a classe 'LivrosPage-mensagem-vazio' */}
+      {livrosFiltrados.length === 0 && Livros.length > 0 && (
+          <p className="LivrosPage-mensagem-vazio">
+              Nenhum livro encontrado para o termo "{searchTerm}".
+          </p>
+      )}
     </div>
   )
 }
@@ -96,14 +130,10 @@ function App() {
         <Route path="/error" element={<Erro />} />
         <Route path="/admin" element={ 
           <ProtectedRoute>
-            {/* 1. O Layout principal (AdminLayout) que contém a Sidebar e o <Outlet /> */}
             <AdminLayout /> 
           </ProtectedRoute>
         }>
-            {/* 2. Rota Index: Conteúdo que aparece em http://localhost:5173/admin */}
             <Route index element={<DashboardEstatisticas />} /> 
-
-            {/* 3. Nova Rota: Conteúdo que aparece em http://localhost:5173/admin/gerenciar-livros */}
             <Route path="gerenciar-livros" element={<GerenciarLivrosPage />} /> 
         </Route>
         <Route path="/carrinho" element={

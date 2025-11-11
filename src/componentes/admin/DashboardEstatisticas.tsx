@@ -89,7 +89,7 @@ export default function DashboardEstatisticas() {
           <span>Bem-vindo, {email}</span>
           <div className="navbar-links">
             <Link to="/">Voltar para Loja</Link>
-            <Link to="/admin/gerenciar-livros">📚 Cadastrar</Link> {/* 🔥 NOVO LINK */}
+            <Link to="/admin/gerenciar-livros">Cadastrar</Link> 
             <Link to="/logout">Sair</Link>
           </div>
         </nav>
@@ -107,7 +107,7 @@ export default function DashboardEstatisticas() {
           <span>Bem-vindo, {email}</span>
           <div className="navbar-links">
             <Link to="/">Voltar para Loja</Link>
-            <Link to="/admin/gerenciar-livros">📚 Cadastrar</Link> {/* 🔥 NOVO LINK */}
+            <Link to="/admin/gerenciar-livros">Cadastrar</Link>
             <Link to="/logout">Sair</Link>
           </div>
         </nav>
@@ -161,7 +161,7 @@ export default function DashboardEstatisticas() {
 
       <div className="dashboard-container">
         <header className="dashboard-header">
-          <h1>📊 Dashboard Administrativo</h1>
+          <h1>Dashboard Administrativo</h1>
           <p>Estatísticas em tempo real dos carrinhos de compra</p>
         </header>
 

@@ -339,3 +339,143 @@
     transform: none;
   }
 }
+
+/* ================== FILTROS DO CARRINHO ================== */
+
+.filtros-carrinho {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr auto;
+  gap: 12px;
+  margin-bottom: 25px;
+  padding: 20px;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  align-items: end;
+}
+
+.filtro-grupo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.filtro-grupo label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #4a5568;
+  margin-bottom: 5px;
+}
+
+.filtro-input {
+  padding: 10px 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  background: white;
+}
+
+.filtro-input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.filtro-select {
+  padding: 10px 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  background: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.filtro-select:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.limpar-filtros {
+  background: linear-gradient(135deg, #a0aec0 0%, #718096 100%);
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  height: fit-content;
+  align-self: end;
+  margin-bottom: 8px;
+}
+
+.limpar-filtros:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(113, 128, 150, 0.3);
+}
+
+.contador-resultados {
+  text-align: center;
+  color: #718096;
+  font-size: 1rem;
+  margin-bottom: 20px;
+  padding: 10px;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.destaque-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, #f6e05e 0%, #ecc94b 100%);
+  color: #744210;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-left: 10px;
+  border: 1px solid #d69e2e;
+}
+
+/* ================== RESPONSIVIDADE DOS FILTROS ================== */
+
+@media (max-width: 768px) {
+  .filtros-carrinho {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  
+  .filtro-grupo {
+    width: 100%;
+  }
+  
+  .limpar-filtros {
+    width: 100%;
+    margin-top: 5px;
+    margin-bottom: 0;
+    align-self: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .filtros-carrinho {
+    padding: 15px;
+    gap: 8px;
+  }
+  
+  .filtro-input,
+  .filtro-select {
+    padding: 8px 12px;
+    font-size: 0.9rem;
+  }
+  
+  .limpar-filtros {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+  }
+}

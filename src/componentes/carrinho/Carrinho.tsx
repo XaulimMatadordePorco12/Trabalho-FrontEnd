@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react";
 import api from "../../api/api";
 import "./Carrinho.css";
+import { Link } from "react-router-dom";
 
 interface ItemCarrinho {
-  id: string; // corresponde a produtoId no backend
+  id: string;
   titulo: string;
   precoUnitario: number;
   quantidade: number;
   capaUrl?: string;
 }
-
 
 function getUsuarioIdDoStorage(): string | null {
   const usuarioStorage = localStorage.getItem('usuario');
@@ -28,6 +28,8 @@ function getUsuarioIdDoStorage(): string | null {
 export default function Carrinho() {
   const [itens, setItens] = useState<ItemCarrinho[]>([]);
   const [total, setTotal] = useState(0);
+  const email = localStorage.getItem('email');
+  const tipoUsuario = localStorage.getItem('tipo');
 
   useEffect(() => {
     const novoTotal = itens.reduce(
@@ -50,7 +52,6 @@ export default function Carrinho() {
     async function fetchCarrinho() {
       try {
         const response = await api.get(`/carrinho/${USUARIO_ID}`);
-        // Transformar itens do backend para o formato esperado no frontend
         const raw = response.data;
         let itensBackend: any[] = [];
         if (raw && raw.itens) itensBackend = raw.itens;
@@ -84,17 +85,12 @@ export default function Carrinho() {
       return;
     }
 
-    // snapshot para rollback
     const prev = itens;
-
-    // atualização otimista: remove do estado imediatamente
     setItens((cur) => cur.filter((it) => it.id !== id));
 
     try {
-      // Usar o endpoint backend existente: POST /removerItem com { produtoId }
       await api.post('/removerItem', { produtoId: id });
     } catch (error) {
-      // rollback em caso de falha
       setItens(prev);
       console.error('Erro ao remover item do carrinho:', error);
       alert('Não foi possível remover o item do carrinho. Tente novamente.');
@@ -107,10 +103,8 @@ export default function Carrinho() {
       return;
     }
 
-    // normalizar quantidade para inteiro
     const novaQtdSanitizada = Math.floor(novaQtd);
 
-    // Se a quantidade for menor que 1, mostrar mensagem e não fazer a requisição
     if (novaQtdSanitizada < 1) {
       const item = itens.find(it => it.id === id);
       if (item) {
@@ -121,10 +115,7 @@ export default function Carrinho() {
       return;
     }
 
-    // pegar snapshot para rollback em caso de erro
     const prevItens = itens;
-
-    // atualização otimista do estado: apenas atualiza a quantidade (não remove)
     setItens((prev) => {
       const existe = prev.some((it) => it.id === id);
       if (!existe) return prev;
@@ -132,13 +123,11 @@ export default function Carrinho() {
     });
 
     try {
-      // POST /atualizarQuantidade com produtoId e quantidade
       await api.post('/atualizarQuantidade', {
         produtoId: id,
         quantidade: novaQtdSanitizada
       });
     } catch (error) {
-      // rollback em caso de falha
       setItens(prevItens);
       console.error('Erro ao alterar quantidade do carrinho:', error);
       alert('Não foi possível atualizar a quantidade do item. Tente novamente.');
@@ -164,70 +153,58 @@ export default function Carrinho() {
   }
 
   return (
-    <div className="carrinho-container">
-      <h1>🛒 Meu Carrinho</h1>
+    <div>
+      {/* Cabeçalho seguindo o mesmo padrão da página anterior */}
+      <nav className="navbar">
+        <span>Bem-vindo, {email}</span>
+        
+        {/* Container dos links */}
+        <div className="navbar-links">
+          <Link to="/">Voltar para Livros</Link>
+          {/* Adiciona link para Admin se for admin */}
+          {tipoUsuario === 'admin' && <Link to="/admin">Admin</Link>} 
+          <Link to="/logout">Sair</Link>
+        </div>
+      </nav>
 
-      {itens.length === 0 ? (
-        <p className="vazio">Seu carrinho está vazio.</p>
-      ) : (
-        <>
-          {itens.map((item) => (
-            <div key={item.id} className="item-carrinho">
-              <img src={item.capaUrl} alt={item.titulo} />
-              <div className="info">
-                <h2>{item.titulo}</h2>
-                <p>R$ {item.precoUnitario.toFixed(2)}</p>
-                <div className="quantidade">
-                  <button onClick={() => alterarQuantidade(item.id, item.quantidade - 1)}>-</button>
-                  <span>{item.quantidade}</span>
-                  <button onClick={() => alterarQuantidade(item.id, item.quantidade + 1)}>+</button>
+      <div className="carrinho-container">
+        <h1 className="page-title">🛒 Meu Carrinho</h1>
+
+        {itens.length === 0 ? (
+          <p className="vazio">Seu carrinho está vazio.</p>
+        ) : (
+          <>
+            {itens.map((item) => (
+              <div key={item.id} className="item-carrinho">
+                <img src={item.capaUrl} alt={item.titulo} />
+                <div className="info">
+                  <h2>{item.titulo}</h2>
+                  <p>R$ {item.precoUnitario.toFixed(2)}</p>
+                  <div className="quantidade">
+                    <button onClick={() => alterarQuantidade(item.id, item.quantidade - 1)}>-</button>
+                    <span>{item.quantidade}</span>
+                    <button onClick={() => alterarQuantidade(item.id, item.quantidade + 1)}>+</button>
+                  </div>
+                  <button className="remover" onClick={() => removerItem(item.id)}>
+                    Remover
+                  </button>
                 </div>
-                <button className="remover" onClick={() => removerItem(item.id)}>
-                  Remover (B1)
-                </button>
-                 <div>
-               <button
-                className="atualizar"
-                onClick={() => atualizarItemCarrinho(item.id, item.quantidade)}
-                style={{
-                  backgroundColor: "#007bff",
-                  color: "white",
-                  border: "none",
-                  padding: "8px 12px",
-                  borderRadius: "5px",
-                  cursor: "pointer",
-                  marginTop: "8px"
-                }}
-              >
-              </button>
-          </div>
               </div>
-            </div>
-          ))}
+            ))}
 
-          <div className="total">
-            <h3>Total: R$ {total.toFixed(2)}</h3>
-            <button className="finalizar">Finalizar Compra</button>
-            <button 
-              onClick={excluirCarrinhoInteiro}
-              style={{ marginTop: '10px', backgroundColor: '#dc3545', color: 'white', border: 'none', padding: '10px 15px', borderRadius: '5px', cursor: 'pointer' }}
-            >
-              Excluir Carrinho (B3)
-            </button>
-          </div>
-        </>
-      )}
+            <div className="total">
+              <h3>Total: R$ {total.toFixed(2)}</h3>
+              <button className="finalizar">Finalizar Compra</button>
+              <button 
+                onClick={excluirCarrinhoInteiro}
+                className="excluir-carrinho"
+              >
+                Excluir Carrinho
+              </button>
+            </div>
+          </>
+        )}
+      </div>
     </div>
-    
-    
   );
-  async function atualizarItemCarrinho(id: string, novaQuantidade: number) {
-  const resposta = await fetch(`http://localhost:8000/carrinho/item/${id}`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ quantidade: novaQuantidade })
-  })
-  const dados = await resposta.json()
-  alert(dados.mensagem)
-}
 }

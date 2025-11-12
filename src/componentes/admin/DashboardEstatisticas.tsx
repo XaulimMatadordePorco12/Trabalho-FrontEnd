@@ -50,7 +50,7 @@ export default function DashboardEstatisticas() {
 
         console.log('🔍 Buscando estatísticas...');
         const response = await axios.get(
-          'http://localhost:8000/admin/estatisticas',
+          `${import.meta.env.VITE_API_URL}/admin/estatisticas`,
           config
         );
         

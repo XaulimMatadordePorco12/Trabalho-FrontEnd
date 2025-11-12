@@ -4,17 +4,11 @@ import "./login.css"
 
 function Login() {
     const navigate = useNavigate()
-    //url   localhost:5123/login?mensagem=Token Inválido
-    //para pegar a mensagem passada pela url usamos o useSearchParams()
     const [searchParams] = useSearchParams()
-    //Dentro do searchParans eu consigo utilizar o get para pegar 
-    // o valor da variável passada pela URL
     const mensagem = searchParams.get("mensagem")
 
-    //Função chamada quando clicamos no botão do formulário
     async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault()
-        // Vamos pegar o que a pessoa digitou no formulário
         const formData = new FormData(event.currentTarget)
         const email = String(formData.get("email") || "")
         const senha = String(formData.get("senha") || "")
@@ -23,7 +17,6 @@ function Login() {
         console.log("Senha:", senha ? '*****' : '')
 
         try {
-            // chamar a API.post para mandar o login e senha
             const resposta = await api.post("/login", {
                 email,
                 senha
@@ -31,15 +24,12 @@ function Login() {
 
             console.debug('Resposta do login:', resposta)
 
-            // aceitar vários nomes possíveis para o token (token, accessToken, access_token)
             const token = resposta?.data?.token || resposta?.data?.accessToken || resposta?.data?.access_token
-            // A API pode retornar o tipo com nomes diferentes: tipo, tipoUsuario, role
             let tipo = resposta?.data?.tipo || resposta?.data?.tipoUsuario || resposta?.data?.role
 
             if (token) {
                 localStorage.setItem("token", token)
 
-                // Se o backend não retornou o tipo explicitamente, tentar decodificar o token (payload JWT) para extrair 'tipo'
                 if (!tipo) {
                     try {
                         const payloadBase64 = token.split('.')[1]
@@ -55,13 +45,11 @@ function Login() {
 
             if (!tipo) tipo = 'cliente'
 
-            // Salva os dados no localStorage
             localStorage.setItem("tipo", tipo)
-            localStorage.setItem("email", email) // 'email' já foi pego do formulário
+            localStorage.setItem("email", email)
             const usuarioId = resposta?.data?.usuarioId;
 
             if (usuarioId) {
-                // O Carrinho.tsx espera um objeto JSON com a chave '_id'
                 const usuarioParaStorage = { _id: usuarioId };
                 try {
                     localStorage.setItem('usuario', JSON.stringify(usuarioParaStorage));
@@ -73,15 +61,9 @@ function Login() {
                 console.warn('Backend de login não retornou usuarioId. O carrinho pode não funcionar.');
             }
 
-            // (Nota: Se sua API também retorna o objeto 'usuario', 
-            // é recomendado salvar ele inteiro também, como fizemos antes: 
-            // localStorage.setItem("usuario", JSON.stringify(resposta.data.usuario))
-            // redireciona baseado no tipo de usuário
             if (tipo === 'admin') {
-                // A linha 'localStorage.getItem('usuario')' foi removida pois não tinha efeito.
                 navigate("/admin")
             } else {
-                // Adicionado o redirecionamento para usuários comuns
                 navigate("/")
             }
 
@@ -94,15 +76,15 @@ function Login() {
         }
     }
 
-
     return (
         <div className="login-page">
             <div className="login-card">
-                <h1>Login</h1>
+                <h1>Bookly</h1>
+                <p className="subtitle">Sua livraria digital</p>
                 {mensagem && <p className="login-message">{mensagem}</p>}
                 <form onSubmit={handleSubmit} className="login-form">
                     <div>
-                        <label htmlFor="email">Email:</label>
+                        <label htmlFor="email">Email</label>
                         <input
                             type="email"
                             name="email"
@@ -112,7 +94,7 @@ function Login() {
                         />
                     </div>
                     <div>
-                        <label htmlFor="senha">Senha:</label>
+                        <label htmlFor="senha">Senha</label>
                         <input
                             type="password"
                             name="senha"
@@ -127,4 +109,5 @@ function Login() {
         </div>
     )
 }
+
 export default Login;

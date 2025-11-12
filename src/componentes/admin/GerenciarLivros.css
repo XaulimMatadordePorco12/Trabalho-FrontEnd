@@ -1,14 +1,17 @@
-/* ================== CONTAINER PRINCIPAL ================== */
+/* GerenciarLivros.css */
+
+/* Container principal */
 .gerenciar-livros-container {
-  max-width: 800px;
-  margin: 0 auto 40px auto; /* Alterado para margin-top 0 */
-  padding: 2rem;
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: white;
   border-radius: 12px;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+/* Títulos */
 .gerenciar-livros-container h1 {
   font-size: 2.5rem;
   font-weight: 700;
@@ -19,170 +22,404 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  border-bottom: 2px solid #f1f3f4;
-  padding-bottom: 1rem;
 }
 
 .gerenciar-livros-container h2 {
   font-size: 1.8rem;
   font-weight: 600;
   color: #2d3748;
-  margin: 3rem 0 1.5rem 0;
+  margin: 40px 0 20px 0;
   text-align: center;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 10px;
 }
 
-/* ================== FORMULÁRIO ================== */
-.gerenciar-livros-container form {
+/* Navbar */
+.navbar {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 15px 30px;
   display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.navbar span {
+  color: white;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.navbar-links {
+  display: flex;
+  gap: 20px;
+}
+
+.navbar-links a {
+  color: white;
+  text-decoration: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  transition: all 0.3s;
+  font-weight: 500;
+}
+
+.navbar-links a:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+/* Formulário de Cadastro */
+.cadastro-form {
   background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-  padding: 2.5rem;
+  padding: 30px;
   border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 40px;
   border: 1px solid #e2e8f0;
-  margin-bottom: 2rem;
   position: relative;
   overflow: hidden;
 }
 
-.gerenciar-livros-container form::before {
+.cadastro-form::before {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
-  right: 0;
-  height: 4px;
+  width: 4px;
+  height: 100%;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
-/* ================== CAMPOS DO FORMULÁRIO ================== */
-.gerenciar-livros-container input[type="text"],
-.gerenciar-livros-container input[type="number"],
-.gerenciar-livros-container textarea {
-  padding: 1rem 1.25rem;
+.cadastro-form input,
+.cadastro-form textarea {
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0;
   border: 1px solid #e2e8f0;
   border-radius: 8px;
   font-size: 1rem;
-  font-family: inherit;
-  transition: all 0.3s ease;
-  background: white;
-  width: 100%;
+  transition: all 0.3s;
   box-sizing: border-box;
+  background: white;
 }
 
-.gerenciar-livros-container input[type="text"]:focus,
-.gerenciar-livros-container input[type="number"]:focus,
-.gerenciar-livros-container textarea:focus {
+.cadastro-form input:focus,
+.cadastro-form textarea:focus {
   outline: none;
   border-color: #667eea;
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-  transform: translateY(-1px);
 }
 
-.gerenciar-livros-container textarea {
-  min-height: 120px;
+.cadastro-form textarea {
+  min-height: 100px;
   resize: vertical;
-  line-height: 1.5;
+  font-family: inherit;
 }
 
-.gerenciar-livros-container input::placeholder,
-.gerenciar-livros-container textarea::placeholder {
-  color: #a0aec0;
-}
-
-/* ================== CHECKBOX DESTAQUE ================== */
-.gerenciar-livros-container label {
+.cadastro-form label {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  margin: 15px 0;
+  cursor: pointer;
   font-weight: 500;
-  color: #4a5568;
-  cursor: pointer;
-  padding: 1rem;
-  background: white;
-  border-radius: 8px;
-  border: 1px solid #e2e8f0;
-  transition: all 0.3s ease;
+  color: #2d3748;
+  transition: color 0.3s;
 }
 
-.gerenciar-livros-container label:hover {
-  border-color: #cbd5e0;
-  background: #f7fafc;
+.cadastro-form label:hover {
+  color: #667eea;
 }
 
-.gerenciar-livros-container input[type="checkbox"] {
-  width: 20px;
-  height: 20px;
-  border-radius: 4px;
-  border: 2px solid #cbd5e0;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  position: relative;
+.cadastro-form input[type="checkbox"] {
+  width: auto;
+  margin-right: 10px;
+  transform: scale(1.2);
+  accent-color: #667eea;
 }
 
-.gerenciar-livros-container input[type="checkbox"]:checked {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-color: #667eea;
-}
-
-.gerenciar-livros-container input[type="checkbox"]:checked::before {
-  content: '✓';
-  position: absolute;
+.cadastro-form button {
+  background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
   color: white;
-  font-size: 14px;
-  font-weight: bold;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-/* ================== BOTÃO DE CADASTRO ================== */
-.gerenciar-livros-container button[type="submit"] {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  padding: 15px 30px;
   border: none;
-  padding: 1.25rem 2rem;
   border-radius: 8px;
   font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
+  transition: all 0.3s;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.cadastro-form button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(72, 187, 120, 0.4);
+}
+
+/* Grid de Livros */
+.livros-grid-admin {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 25px;
+  margin-top: 20px;
+}
+
+/* Card de Livro */
+.livro-card-admin {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
-  margin-top: 1rem;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  height: fit-content;
+  position: relative;
+  overflow: hidden;
+}
+
+.livro-card-admin::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.livro-card-admin:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  border-color: #cbd5e0;
+}
+
+/* Formulário de Edição */
+.form-edicao {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.form-edicao input,
+.form-edicao textarea {
+  padding: 10px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  transition: all 0.3s;
+  width: 100%;
+  box-sizing: border-box;
+  background: white;
+}
+
+.form-edicao input:focus,
+.form-edicao textarea:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.form-edicao textarea {
+  min-height: 80px;
+  resize: vertical;
+  font-family: inherit;
+}
+
+.form-edicao label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: #2d3748;
+  margin: 5px 0;
+  font-weight: 500;
+}
+
+.form-edicao input[type="checkbox"] {
+  width: auto;
+  margin: 0;
+  accent-color: #667eea;
+}
+
+/* Ações de Edição */
+.acoes-edicao {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.btn-salvar {
+  background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  flex: 1;
+  transition: all 0.3s;
+}
+
+.btn-salvar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(72, 187, 120, 0.3);
+}
+
+.btn-cancelar {
+  background: linear-gradient(135deg, #fc8181 0%, #f56565 100%);
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  flex: 1;
+  transition: all 0.3s;
+}
+
+.btn-cancelar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(245, 101, 101, 0.3);
+}
+
+/* Visualização Normal do Livro */
+.livro-capa {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  border: 2px solid #e2e8f0;
+  transition: transform 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.livro-capa:hover {
+  transform: scale(1.05);
+}
+
+.livro-info {
+  flex: 1;
+  margin-bottom: 15px;
+}
+
+.livro-info h3 {
+  color: #2d3748;
+  margin: 0 0 10px 0;
+  font-size: 1.3rem;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 600;
+}
+
+.livro-info p {
+  margin: 5px 0;
+  color: #4a5568;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.preco-display {
+  font-size: 1.2rem !important;
+  font-weight: bold;
+  color: #2d3748 !important;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.livro-desc {
+  color: #4a5568 !important;
+  font-style: italic;
+  margin-top: 10px !important;
+  line-height: 1.4;
+  background: white;
+  padding: 8px;
+  border-radius: 4px;
+  border-left: 3px solid #667eea;
+}
+
+/* Ações do Livro */
+.livro-acoes {
+  display: flex;
+  gap: 10px;
+  margin-top: auto;
+}
+
+.btn-editar {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  flex: 1;
+  transition: all 0.3s;
+  font-size: 0.9rem;
+}
+
+.btn-editar:hover {
+  transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
 }
 
-.gerenciar-livros-container button[type="submit"]:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+.btn-excluir {
+  background: linear-gradient(135deg, #fc8181 0%, #f56565 100%);
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  flex: 1;
+  transition: all 0.3s;
+  font-size: 0.9rem;
 }
 
-.gerenciar-livros-container button[type="submit"]:active {
-  transform: translateY(-1px);
+.btn-excluir:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(245, 101, 101, 0.3);
 }
 
-.gerenciar-livros-container button[type="submit"]:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
-}
-
-/* ================== SEÇÃO DE LISTA (FUTURA) ================== */
-.lista-livros-placeholder {
+/* Mensagem de lista vazia */
+.lista-vazia {
   text-align: center;
-  padding: 3rem 2rem;
+  color: #718096;
+  font-size: 1.3rem;
+  grid-column: 1 / -1;
+  padding: 60px 20px;
   background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
   border-radius: 12px;
   border: 2px dashed #cbd5e0;
-  color: #718096;
-  margin-top: 2rem;
+  margin: 20px 0;
 }
 
-.lista-livros-placeholder p {
-  font-size: 1.1rem;
-  margin: 0;
-  font-style: italic;
+/* Destaque para livros em destaque */
+.livro-card-admin:has(.livro-info h3:contains('⭐')) {
+  border-left: 4px solid #f6e05e;
+  background: linear-gradient(135deg, #fefce8 0%, #fef5e7 100%);
+}
+
+.destaque-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, #f6e05e 0%, #ecc94b 100%);
+  color: #744210;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-left: 10px;
+  border: 1px solid #d69e2e;
 }
 
 /* ================== ANIMAÇÕES ================== */
+
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -194,186 +431,130 @@
   }
 }
 
-.gerenciar-livros-container form {
-  animation: fadeIn 0.6s ease;
+.livro-card-admin {
+  animation: fadeIn 0.5s ease forwards;
 }
 
-.gerenciar-livros-container h2 {
-  animation: fadeIn 0.8s ease;
+.livro-card-admin:nth-child(odd) {
+  animation-delay: 0.1s;
+}
+
+.livro-card-admin:nth-child(even) {
+  animation-delay: 0.2s;
 }
 
 /* ================== RESPONSIVIDADE ================== */
+
 @media (max-width: 768px) {
   .gerenciar-livros-container {
     margin: 20px auto;
-    padding: 1.5rem;
+    padding: 15px;
   }
-
+  
+  .navbar {
+    flex-direction: column;
+    gap: 15px;
+    padding: 15px;
+  }
+  
+  .navbar-links {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .livros-grid-admin {
+    grid-template-columns: 1fr;
+  }
+  
+  .cadastro-form {
+    padding: 20px;
+  }
+  
+  .livro-card-admin {
+    padding: 15px;
+  }
+  
+  .acoes-edicao,
+  .livro-acoes {
+    flex-direction: column;
+  }
+  
   .gerenciar-livros-container h1 {
     font-size: 2rem;
   }
-
-  .gerenciar-livros-container form {
-    padding: 1.5rem;
-    gap: 1.25rem;
-  }
-
-  .gerenciar-livros-container input[type="text"],
-  .gerenciar-livros-container input[type="number"],
-  .gerenciar-livros-container textarea {
-    padding: 0.875rem 1rem;
-    font-size: 0.95rem;
-  }
-
-  .gerenciar-livros-container button[type="submit"] {
-    padding: 1rem 1.5rem;
-    font-size: 1rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .gerenciar-livros-container {
-    padding: 1rem;
-    margin: 10px auto;
-  }
-
-  .gerenciar-livros-container h1 {
-    font-size: 1.8rem;
-  }
-
-  .gerenciar-livros-container form {
-    padding: 1.25rem;
-    gap: 1rem;
-  }
-
+  
   .gerenciar-livros-container h2 {
     font-size: 1.5rem;
   }
 }
 
+@media (max-width: 480px) {
+  .gerenciar-livros-container {
+    padding: 10px;
+  }
+  
+  .livro-card-admin {
+    padding: 15px;
+  }
+  
+  .livro-capa {
+    width: 100%;
+    height: 180px;
+  }
+  
+  .gerenciar-livros-container h1 {
+    font-size: 1.8rem;
+  }
+  
+  .cadastro-form input,
+  .cadastro-form textarea {
+    padding: 10px;
+  }
+}
+
 /* ================== MELHORIAS DE ACESSIBILIDADE ================== */
-.gerenciar-livros-container input:focus,
-.gerenciar-livros-container textarea:focus,
-.gerenciar-livros-container button:focus,
-.gerenciar-livros-container input[type="checkbox"]:focus {
-  outline: 2px solid #667eea;
+
+button:focus,
+input:focus,
+textarea:focus {
+  outline: 3px solid #667eea;
   outline-offset: 2px;
 }
 
 /* High contrast mode support */
 @media (prefers-contrast: high) {
-  .gerenciar-livros-container {
+  .livro-card-admin {
     border: 2px solid #2d3748;
   }
-
-  .gerenciar-livros-container form {
-    border: 2px solid #2d3748;
-  }
-
-  .gerenciar-livros-container input[type="text"],
-  .gerenciar-livros-container input[type="number"],
-  .gerenciar-livros-container textarea {
+  
+  .cadastro-form {
     border: 2px solid #2d3748;
   }
 }
 
 /* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
-  .gerenciar-livros-container form,
-  .gerenciar-livros-container h2 {
-    animation: none;
-  }
-
-  .gerenciar-livros-container input[type="text"],
-  .gerenciar-livros-container input[type="number"],
-  .gerenciar-livros-container textarea,
-  .gerenciar-livros-container button[type="submit"],
-  .gerenciar-livros-container label {
+  .livro-card-admin,
+  .livro-capa,
+  .btn-editar,
+  .btn-excluir,
+  .btn-salvar,
+  .btn-cancelar {
     transition: none;
   }
-
-  .gerenciar-livros-container button[type="submit"]:hover {
+  
+  .livro-card-admin:hover {
+    transform: none;
+  }
+  
+  .livro-capa:hover {
     transform: none;
   }
 }
 
-/* ================== NAVBAR ================== */
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 30px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  margin-bottom: 2rem;
-  flex-wrap: wrap;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  color: white;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-
-.navbar span {
-  font-weight: 600;
-  font-size: 1.1em;
-  color: white;
-}
-
-.navbar a {
-  margin-left: 1rem;
-  color: white;
-  text-decoration: none;
-  font-weight: 500;
-  padding: 8px 16px;
-  border-radius: 6px;
-  transition: all 0.3s ease;
-  background-color: rgba(255, 255, 255, 0.1);
-}
-
-.navbar a:hover {
-  background-color: rgba(255, 255, 255, 0.2);
-  transform: translateY(-2px);
-  text-decoration: none;
-}
-
-.navbar-links {
-  display: flex;
-  gap: 15px;
-}
-
-/* ================== RESPONSIVIDADE DA NAVBAR ================== */
-@media (max-width: 768px) {
-  .navbar {
-    padding: 12px 15px;
-    flex-direction: column;
-    gap: 15px;
-  }
-  
-  .navbar-links {
-    width: 100%;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-  
-  .navbar a {
-    margin-left: 0.5rem;
-    margin-right: 0.5rem;
-    padding: 6px 12px;
-    font-size: 0.9em;
-  }
-}
-
-@media (max-width: 480px) {
-  .navbar {
-    padding: 10px;
-  }
-  
-  .navbar a {
-    padding: 5px 10px;
-    font-size: 0.85em;
-  }
-  
-  .navbar span {
-    font-size: 1em;
-  }
+/* Estados de loading */
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
 }

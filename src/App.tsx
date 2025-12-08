@@ -9,6 +9,8 @@ import Erro from './componentes/erro/erro'
 import AdminLayout from './componentes/admin/AdminLayout';
 import DashboardEstatisticas from './componentes/admin/DashboardEstatisticas';
 import GerenciarLivrosPage from './componentes/admin/GerenciarLivros';
+import {CheckoutForm} from './componentes/pagamento/CheckoutForm';
+import {Return} from './componentes/pagamento/Return';
 
 type LivroType = {
   _id: string,
@@ -32,10 +34,10 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
 
 function LivrosPage() {
-  const [Livros, setLivros] = useState<LivroType[]>([]) 
-  const [searchTerm, setSearchTerm] = useState('') 
+  const [Livros, setLivros] = useState<LivroType[]>([])
+  const [searchTerm, setSearchTerm] = useState('')
   const email = localStorage.getItem('email')
-  const tipoUsuario = localStorage.getItem('tipo') 
+  const tipoUsuario = localStorage.getItem('tipo')
 
   // 1. useEffect: Apenas carrega os livros (Listagem)
   useEffect(() => {
@@ -49,7 +51,7 @@ function LivrosPage() {
   const livrosFiltrados = Livros.filter(livro => {
     // Converte o termo de busca e as propriedades do livro para minúsculas
     const lowerCaseSearchTerm = searchTerm.toLowerCase();
-    
+
     // Filtra se o título OU o gênero inclui o termo de busca
     const tituloMatch = livro.titulo.toLowerCase().includes(lowerCaseSearchTerm);
     const generoMatch = livro.genero.toLowerCase().includes(lowerCaseSearchTerm);
@@ -75,21 +77,21 @@ function LivrosPage() {
       {/* Navbar: usa a classe 'navbar' para layout principal */}
       <nav className="navbar">
         <span>Bem-vindo, {email}</span>
-        
+
         {/* Campo de Busca: usa a classe 'navbar-search' */}
         <input
-            type="text"
-            placeholder="Buscar por Título ou Gênero..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)} 
-            className="navbar-search" 
+          type="text"
+          placeholder="Buscar por Título ou Gênero..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="navbar-search"
         />
 
         {/* Container dos links: usa a classe 'navbar-links' */}
         <div className="navbar-links">
           <Link to="/carrinho">Carrinho</Link>
           {/* Adiciona link para Admin se for admin */}
-          {tipoUsuario === 'admin' && <Link to="/admin">Admin</Link>} 
+          {tipoUsuario === 'admin' && <Link to="/admin">Admin</Link>}
           <Link to="/logout">Sair</Link>
         </div>
       </nav>
@@ -113,9 +115,9 @@ function LivrosPage() {
       </div>
       {/* Mensagem se não houver resultados: usa a classe 'LivrosPage-mensagem-vazio' */}
       {livrosFiltrados.length === 0 && Livros.length > 0 && (
-          <p className="LivrosPage-mensagem-vazio">
-              Nenhum livro encontrado para o termo "{searchTerm}".
-          </p>
+        <p className="LivrosPage-mensagem-vazio">
+          Nenhum livro encontrado para o termo "{searchTerm}".
+        </p>
       )}
     </div>
   )
@@ -128,17 +130,22 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/logout" element={<Logout />} />
         <Route path="/error" element={<Erro />} />
-        <Route path="/admin" element={ 
+        <Route path="/admin" element={
           <ProtectedRoute>
-            <AdminLayout /> 
+            <AdminLayout />
           </ProtectedRoute>
         }>
-            <Route index element={<DashboardEstatisticas />} /> 
-            <Route path="gerenciar-livros" element={<GerenciarLivrosPage />} /> 
+          <Route index element={<DashboardEstatisticas />} />
+          <Route path="gerenciar-livros" element={<GerenciarLivrosPage />} />
         </Route>
         <Route path="/carrinho" element={
           <ProtectedRoute>
             <Carrinho />
+          </ProtectedRoute>
+        } />
+        <Route path="/pagamento" element={
+          <ProtectedRoute>
+            <CheckoutForm />
           </ProtectedRoute>
         } />
         <Route path="/" element={
@@ -146,6 +153,12 @@ function App() {
             <LivrosPage />
           </ProtectedRoute>
         } />
+        <Route path="/pagamento" element={
+          <ProtectedRoute>
+            <CheckoutForm />
+          </ProtectedRoute>
+        } />
+        <Route path="/return" element={<Return />} />
       </Routes>
     </BrowserRouter>
   )

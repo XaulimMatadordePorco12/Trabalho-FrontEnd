@@ -46,6 +46,7 @@ export default function Carrinho() {
     setTotal(novoTotal);
   }, [itensFiltrados]);
 
+  // Aplicar filtros sempre que os critérios mudarem
   useEffect(() => {
     aplicarFiltros();
   }, [itens, termoBusca, filtroDestaque, filtroPreco]);
@@ -250,7 +251,6 @@ export default function Carrinho() {
     }
   }
 
-  
   if (carregando) {
     return (
       <div>
@@ -269,8 +269,6 @@ export default function Carrinho() {
       </div>
     );
   }
-
-
 
   return (
     <div>
@@ -332,7 +330,7 @@ export default function Carrinho() {
           )}
         </div>
 
-
+        {/* Contador de resultados */}
         {itens.length > 0 && (
           <div className="contador-resultados">
             Mostrando {itensFiltrados.length} de {itens.length} itens no carrinho
@@ -375,9 +373,7 @@ export default function Carrinho() {
 
             <div className="total">
               <h3>Total: R$ {total.toFixed(2)}</h3>
-              <Link to="/pagamento">
-                <button className="finalizar">Finalizar Compra</button>
-              </Link>
+              <button className="finalizar">Finalizar Compra</button>
               <button 
                 onClick={excluirCarrinhoInteiro}
                 className="excluir-carrinho"

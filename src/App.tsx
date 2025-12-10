@@ -10,6 +10,13 @@ import AdminLayout from './componentes/admin/AdminLayout';
 import DashboardEstatisticas from './componentes/admin/DashboardEstatisticas';
 import GerenciarLivrosPage from './componentes/admin/GerenciarLivros';
 
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+import Pagamento from './componentes/pagamento/pagamento'; 
+
+
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY as string);
+
 type LivroType = {
   _id: string,
   nome: string,
@@ -21,6 +28,7 @@ type LivroType = {
   genero: string,
   destaque: boolean
 }
+
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const token = localStorage.getItem('token');
@@ -144,6 +152,13 @@ function App() {
         <Route path="/" element={
           <ProtectedRoute>
             <LivrosPage />
+          </ProtectedRoute>
+        } />
+        <Route path="/finalizar-compra" element={
+          <ProtectedRoute>
+            <Elements stripe={stripePromise}>
+               <Pagamento />
+            </Elements>
           </ProtectedRoute>
         } />
       </Routes>

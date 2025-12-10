@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import api from "../../api/api";
 import "./Carrinho.css";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
 
 interface ItemCarrinho {
   id: string;
@@ -26,7 +28,10 @@ function getUsuarioIdDoStorage(): string | null {
   return null;
 }
 
+
+
 export default function Carrinho() {
+  const navigate = useNavigate();
   const [itens, setItens] = useState<ItemCarrinho[]>([]);
   const [itensFiltrados, setItensFiltrados] = useState<ItemCarrinho[]>([]);
   const [total, setTotal] = useState(0);
@@ -373,7 +378,12 @@ export default function Carrinho() {
 
             <div className="total">
               <h3>Total: R$ {total.toFixed(2)}</h3>
-              <button className="finalizar">Finalizar Compra</button>
+              <button 
+                  className="finalizar" 
+                  onClick={() => navigate("/finalizar-compra")}
+              >
+                  Finalizar Compra
+              </button>
               <button 
                 onClick={excluirCarrinhoInteiro}
                 className="excluir-carrinho"

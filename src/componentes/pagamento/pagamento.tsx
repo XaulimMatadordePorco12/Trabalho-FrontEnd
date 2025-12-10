@@ -2,7 +2,7 @@ import { useStripe, useElements, CardNumberElement, CardExpiryElement, CardCvcEl
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../api/api";
-import "./Pagamento.css";
+import "./pagamento.css";
 
 // Interface atualizada para receber a capaUrl do backend
 interface ItemCarrinho {
